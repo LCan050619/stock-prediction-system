@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票价格预测系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1> 基于集成学习的股票价格预测系统</h1>
+            <p class="subtitle">合肥大学 - 人工智能与大数据学院课程设计</p>
+        </header>
+        
+        <main>
+            <section class="input-section">
+                <h2>股票查询</h2>
+                <div class="input-group">
+                    <label for="stock-code">请输入股票代码：</label>
+                    <input type="text" 
+                           id="stock-code" 
+                           placeholder="例如：600519.SS"
+                           autocomplete="off">
+                    <button onclick="predict()" class="btn-primary">查询</button>
+                </div>
+                
+                <div class="stock-list">
+                    <p><strong>支持的股票列表：</strong></p>
+                    <ul>
+                        {% for code, name in stocks.items() %}
+                        <li><code>{{ code }}</code> - {{ name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            
+            <div id="error-message" class="error hidden"></div>
+            
+            <section id="result-section" class="hidden">
+                <h2 id="stock-title"></h2>
+                
+                <div class="prediction-cards">
+                    <div class="card card-1day">
+                        <h3> 未来1天预测</h3>
+                        <div id="pred-1day" class="prediction-result"></div>
+                    </div>
+                    <div class="card card-5day">
+                        <h3>📊 未来5天预测</h3>
+                        <div id="pred-5day" class="prediction-result"></div>
+                    </div>
+                    <div class="card card-10day">
+                        <h3>📈 未来10天预测</h3>
+                        <div id="pred-10day" class="prediction-result"></div>
+                    </div>
+                </div>
+                
+                <!-- 可视化图表区域 -->
+                <div id="visualization-section" style="margin-top: 40px; display: none;">
+                    <h3 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">📊 模型可视化分析</h3>
+                    
+                    <!-- 模型对比图 -->
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #333;">🔍 模型性能对比 (Linear vs LightGBM)</h4>
+                        <img id="model-comparison-chart" src="" alt="模型对比图" style="width: 100%; max-width: 1200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
+                    
+                    <!-- 预测vs实际图 -->
+                    <div style="margin-top: 30px;">
+                        <h4 style="color: #333;"> 预测价格 vs 实际价格 (Linear - 最佳模型)</h4>
+                        <img id="pred-vs-actual-chart" src="" alt="预测vs实际图" style="width: 100%; max-width: 1200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
+                    
+                    <!-- 残差分布图 -->
+                    <div style="margin-top: 30px;">
+                        <h4 style="color: #333;">📉 预测误差分布 (Residual Distribution)</h4>
+                        <img id="residual-chart" src="" alt="残差分布图" style="width: 100%; max-width: 1200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
+                    
+                    <div class="info-box" style="margin-top: 20px;">
+                        <h4>💡 图表说明</h4>
+                        <ul>
+                            <li><strong>模型对比图</strong>：比较Linear、Ridge、Lasso和LightGBM的RMSE、MAE、R²指标</li>
+                            <li><strong>预测vs实际图</strong>：展示Linear模型（当前表现最优）的预测效果，散点越接近红色虚线越好</li>
+                            <li><strong>残差分布图</strong>：展示Linear模型的预测误差分布，越接近正态分布越好</li>
+                            <li><strong>注意</strong>：在本项目中，线性模型表现优于复杂的集成学习模型，这符合"简单即美"的机器学习原则</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h4>💡 说明</h4>
+                    <ul>
+                        <li><strong>预测价格</strong>：模型预测的未来N天收盘价</li>
+                        <li><strong>当前价格</strong>：最新收盘价</li>
+                        <li><strong>涨跌幅</strong>：(预测价格 - 当前价格) / 当前价格 × 100%</li>
+                        <li><strong>趋势</strong>：上涨（预测价格 > 当前价格）或下跌（预测价格 ≤ 当前价格）</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 股票价格预测系统 | 基于LightGBM/XGBoost/RandomForest集成学习</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片加载测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-item {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-item.success {
+            border-color: #4CAF50;
+            background-color: #f0fff0;
+        }
+        .test-item.error {
+            border-color: #f44336;
+            background-color: #fff0f0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .status.ok {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .status.fail {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 图片加载诊断测试</h1>
+    
+    <div class="test-item">
+        <h3>测试1：直接访问图片URL</h3>
+        <p>URL: <code>/static/figures/pred_vs_actual_000001_SZ_linear_5day.png</code></p>
+        <img src="/static/figures/pred_vs_actual_000001_SZ_linear_5day.png" 
+             alt="预测vs实际图"
+             onload="this.parentElement.classList.add('success'); document.getElementById('status1').textContent='✅ 加载成功'; document.getElementById('status1').className='status ok';"
+             onerror="this.parentElement.classList.add('error'); document.getElementById('status1').textContent='❌ 加载失败'; document.getElementById('status1').className='status fail';">
+        <br>
+        <span id="status1" class="status">加载中...</span>
+    </div>
+
+    <div class="test-item">
+        <h3>测试2：残差分布图</h3>
+        <p>URL: <code>/static/figures/residual_000001_SZ_linear_5day.png</code></p>
+        <img src="/static/figures/residual_000001_SZ_linear_5day.png" 
+             alt="残差分布图"
+             onload="this.parentElement.classList.add('success'); document.getElementById('status2').textContent='✅ 加载成功'; document.getElementById('status2').className='status ok';"
+             onerror="this.parentElement.classList.add('error'); document.getElementById('status2').textContent='❌ 加载失败'; document.getElementById('status2').className='status fail';">
+        <br>
+        <span id="status2" class="status">加载中...</span>
+    </div>
+
+    <div class="test-item">
+        <h3>测试3：模型对比图</h3>
+        <p>URL: <code>/static/figures/model_comparison_000001_SZ_5day.png</code></p>
+        <img src="/static/figures/model_comparison_000001_SZ_5day.png" 
+             alt="模型对比图"
+             onload="this.parentElement.classList.add('success'); document.getElementById('status3').textContent='✅ 加载成功'; document.getElementById('status3').className='status ok';"
+             onerror="this.parentElement.classList.add('error'); document.getElementById('status3').textContent=' 加载失败'; document.getElementById('status3').className='status fail';">
+        <br>
+        <span id="status3" class="status">加载中...</span>
+    </div>
+
+    <div class="test-item">
+        <h3>测试4：不同股票的图片</h3>
+        <p>URL: <code>/static/figures/pred_vs_actual_600519_SS_linear_5day.png</code></p>
+        <img src="/static/figures/pred_vs_actual_600519_SS_linear_5day.png" 
+             alt="贵州茅台预测图"
+             onload="this.parentElement.classList.add('success'); document.getElementById('status4').textContent='✅ 加载成功'; document.getElementById('status4').className='status ok';"
+             onerror="this.parentElement.classList.add('error'); document.getElementById('status4').textContent=' 加载失败'; document.getElementById('status4').className='status fail';">
+        <br>
+        <span id="status4" class="status">加载中...</span>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background-color: #e3f2fd; border-radius: 8px;">
+        <h3>💡 调试信息</h3>
+        <ul>
+            <li><strong>浏览器</strong>: <span id="browser-info"></span></li>
+            <li><strong>页面URL</strong>: <span id="page-url"></span></li>
+            <li><strong>测试时间</strong>: <span id="test-time"></span></li>
+        </ul>
+    </div>
+
+    <script>
+        // 显示浏览器信息
+        document.getElementById('browser-info').textContent = navigator.userAgent;
+        document.getElementById('page-url').textContent = window.location.href;
+        document.getElementById('test-time').textContent = new Date().toLocaleString('zh-CN');
+
+        // 自动刷新页面（每5秒）
+        setTimeout(() => {
+            console.log('页面已加载，检查图片状态...');
+            
+            // 检查所有图片
+            const images = document.querySelectorAll('img');
+            let successCount = 0;
+            let failCount = 0;
+            
+            images.forEach((img, index) => {
+                if (img.complete && img.naturalHeight > 0) {
+                    successCount++;
+                    console.log(`图片 ${index + 1}: ✅ 加载成功 (${img.naturalWidth}x${img.naturalHeight})`);
+                } else {
+                    failCount++;
+                    console.log(`图片 ${index + 1}: ❌ 加载失败`);
+                }
+            });
+            
+            console.log(`\n总计: ${successCount} 成功, ${failCount} 失败`);
+            
+            if (failCount === 0) {
+                console.log('\n🎉 所有图片加载成功！');
+            } else {
+                console.log('\n⚠️ 部分图片加载失败，请检查：');
+                console.log('1. 浏览器控制台是否有错误信息');
+                console.log('2. 网络面板中图片请求的状态码');
+                console.log('3. 尝试硬刷新页面 (Ctrl+Shift+R)');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

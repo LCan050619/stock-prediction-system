@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# 模型文件
+*.pkl
+*.joblib
+
+# 数据文件
+data/raw/*.csv
+data/processed/*.csv
+results/figures/*.png
+results/evaluation_metrics.csv
+
+# 数据库（部署后会自动创建）
+data/*.db
+
+# 环境变量
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 临时文件
+*.tmp
+*.bak
+
+# 不需要部署的文档/脚本
+CODE_CLEANUP_SUMMARY.md
+FUNCTIONALITY_CHECK_REPORT.md
+QUICK_START_GUIDE.md
+README_FOR_REPORT.md
+cleanup_redundant_files.py
+generate_visualizations.py

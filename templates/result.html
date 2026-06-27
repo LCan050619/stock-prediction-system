@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预测结果 - {{ stock_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ stock_name }} ({{ stock_code }})</h1>
+            <a href="/" class="btn-secondary">← 返回首页</a>
+        </header>
+        
+        <main>
+            <section class="visualization-section">
+                <h2>模型评估可视化</h2>
+                
+                <div class="chart-grid">
+                    <div class="chart-item">
+                        <h3>ROC曲线（5天预测）</h3>
+                        <img src="{{ url_for('static', filename='figures/roc_' + stock_code.replace('.', '_') + '_lightgbm_5day.png') }}" 
+                             alt="ROC曲线" 
+                             onerror="this.src='/static/placeholder.png'; this.alt='图表暂未生成'">
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h3>特征重要性</h3>
+                        <img src="{{ url_for('static', filename='figures/feature_imp_' + stock_code.replace('.', '_') + '.png') }}" 
+                             alt="特征重要性" 
+                             onerror="this.src='/static/placeholder.png'; this.alt='图表暂未生成'">
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h3>混淆矩阵（5天预测）</h3>
+                        <img src="{{ url_for('static', filename='figures/cm_' + stock_code.replace('.', '_') + '_lightgbm_5day.png') }}" 
+                             alt="混淆矩阵" 
+                             onerror="this.src='/static/placeholder.png'; this.alt='图表暂未生成'">
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h3>预测时间线（5天预测）</h3>
+                        <img src="{{ url_for('static', filename='figures/prediction_timeline_' + stock_code.replace('.', '_') + '_5day.png') }}" 
+                             alt="预测时间线" 
+                             onerror="this.src='/static/placeholder.png'; this.alt='图表暂未生成'">
+                    </div>
+                </div>
+            </section>
+            
+            <section class="back-section">
+                <a href="/" class="btn-primary">返回查询页面</a>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 股票价格预测系统 | 课程设计项目</p>
+        </footer>
+    </div>
+</body>
+</html>
